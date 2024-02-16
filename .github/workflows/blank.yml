@@ -21,7 +21,7 @@ jobs:
         run: pip install -r requirements/test.txt
 
       - name: flake8
-        run: flake8 --exclude venv --inline-quotes double lyceum
+        run: flake8 --exclude venv --inline-quotes double game
 
       - name: black
-        run: black --line-length 79 --exclude venv --check --skip-string-normalization lyceum
+        run: black --line-length 79 --exclude venv --check --skip-string-normalization game
