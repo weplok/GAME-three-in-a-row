@@ -2,6 +2,8 @@
 
 ### Pygame Project by students of Yandex Lyceum 2024
 
+***
+
 ## To run game in Windows, use terminal in project-directory:
 
 ### Create and run venv
@@ -29,6 +31,8 @@ cd game
 ```bash
 python main.py
 ```
+
+***
 
 # CI-badges
 
