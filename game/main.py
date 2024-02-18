@@ -13,15 +13,19 @@ def write_text(screen, text, size, color, top, x):
 
 
 def start_menu():
-    intro_text = ["ТРИ В РЯД! ПРОТОТИП",
-                  "ИГРАТЬ",
-                  "Режим игры:",
-                  "С заполнением",
-                  "Без заполнения"]
-    color = pygame.Color('pink')
+    intro_text = [
+        "ТРИ В РЯД! ПРОТОТИП",
+        "ИГРАТЬ",
+        "Режим игры:",
+        "С заполнением",
+        "Без заполнения",
+    ]
+    color = pygame.Color("pink")
 
     # Загрузка фона меню
-    fon = pygame.transform.scale(pygame.image.load("static/fon.jpg"), (size[0], size[1]))
+    fon = pygame.transform.scale(
+        pygame.image.load("static/fon.jpg"), (size[0], size[1])
+    )
     screen.blit(fon, (0, 0))
 
     # Основное меню
@@ -35,12 +39,16 @@ def start_menu():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.pos[0] in range(220, 380) and event.pos[1] in range(395, 455):
+                if event.pos[0] in range(220, 380) and event.pos[1] in range(
+                    395, 455
+                ):
                     main_menu = False
         pygame.display.flip()
 
     # Меню выбора режима игры
-    fon = pygame.transform.scale(pygame.image.load("static/fon.jpg"), (size[0], size[1]))
+    fon = pygame.transform.scale(
+        pygame.image.load("static/fon.jpg"), (size[0], size[1])
+    )
     screen.blit(fon, (0, 0))
     write_text(screen, intro_text[0], 65, color, 80, 40)
     write_text(screen, intro_text[2], 50, color, 400, 180)
@@ -56,10 +64,14 @@ def start_menu():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.pos[0] in range(45, 365) and event.pos[1] in range(495, 550):
+                if event.pos[0] in range(45, 365) and event.pos[1] in range(
+                    495, 550
+                ):
                     FILL_MODE = True
                     choose_game_mode = False
-                if event.pos[0] in range(45, 365) and event.pos[1] in range(565, 620):
+                if event.pos[0] in range(45, 365) and event.pos[1] in range(
+                    565, 620
+                ):
                     FILL_MODE = False
                     choose_game_mode = False
         pygame.display.flip()
