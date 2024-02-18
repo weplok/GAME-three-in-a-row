@@ -36,4 +36,4 @@ python main.py
 
 # CI-badges
 
-[![Linting](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml/badge.svg)](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml)
+[![Linting](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml/badge.svg?branch=main)](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml)

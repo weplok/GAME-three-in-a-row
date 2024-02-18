@@ -36,10 +36,11 @@ class Three(Board):
         main_color = self.board[first_y][first_x]
         if self.board[first_y][first_x] != 0:
             self.board[first_y][first_x] -= 4
+            one_color = True
+        else:
+            one_color = False
+
         success_count = 1
-
-        one_color = True
-
         # Обработка следующих клеток
         for x, y in self.pressed_pos_list[1:]:
             if self.board[y][x] == main_color:

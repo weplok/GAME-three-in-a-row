@@ -50,6 +50,7 @@ def start_menu():
     pygame.draw.rect(screen, "white", (45, 565, 320, 55), 2)
 
     choose_game_mode = True
+    global FILL_MODE
     while choose_game_mode:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -98,6 +99,8 @@ def game_proccess():
             if event.type == pygame.MOUSEBUTTONUP and mouse_down_flag:
                 mouse_down_flag = False
                 print(board.result_work())
+                if FILL_MODE:
+                    board.generate_board()
 
             screen.fill((0, 0, 0))
             board.render(screen)
