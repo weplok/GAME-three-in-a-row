@@ -3,12 +3,71 @@ from game_board import Three
 import pygame
 
 
-def main():
-    pygame.init()
-    size = 600, 1000
-    screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Три в ряд")
+def write_text(screen, text, size, color, top, x):
+    font = pygame.font.Font("static/main_font.ttf", size)
+    string_rendered = font.render(text, 1, color)
+    intro_rect = string_rendered.get_rect()
+    intro_rect.top = top
+    intro_rect.x = x
+    screen.blit(string_rendered, intro_rect)
 
+
+def start_menu():
+    intro_text = ["ТРИ В РЯД! ПРОТОТИП",
+                  "ИГРАТЬ",
+                  "Режим игры:",
+                  "С заполнением",
+                  "Без заполнения"]
+    color = pygame.Color('pink')
+
+    # Загрузка фона меню
+    fon = pygame.transform.scale(pygame.image.load("static/fon.jpg"), (size[0], size[1]))
+    screen.blit(fon, (0, 0))
+
+    # Основное меню
+    write_text(screen, intro_text[0], 65, color, 80, 40)
+    write_text(screen, intro_text[1], 50, color, 400, 230)
+    pygame.draw.rect(screen, "white", (220, 395, 160, 60), 2)
+
+    main_menu = True
+    while main_menu:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.pos[0] in range(220, 380) and event.pos[1] in range(395, 455):
+                    main_menu = False
+        pygame.display.flip()
+
+    # Меню выбора режима игры
+    fon = pygame.transform.scale(pygame.image.load("static/fon.jpg"), (size[0], size[1]))
+    screen.blit(fon, (0, 0))
+    write_text(screen, intro_text[0], 65, color, 80, 40)
+    write_text(screen, intro_text[2], 50, color, 400, 180)
+    write_text(screen, intro_text[3], 50, color, 500, 50)
+    pygame.draw.rect(screen, "white", (45, 495, 320, 55), 2)
+    write_text(screen, intro_text[4], 50, color, 570, 50)
+    pygame.draw.rect(screen, "white", (45, 565, 320, 55), 2)
+
+    choose_game_mode = True
+    while choose_game_mode:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.pos[0] in range(45, 365) and event.pos[1] in range(495, 550):
+                    FILL_MODE = True
+                    choose_game_mode = False
+                if event.pos[0] in range(45, 365) and event.pos[1] in range(565, 620):
+                    FILL_MODE = False
+                    choose_game_mode = False
+        pygame.display.flip()
+
+    # Выход из меню
+    return
+
+
+def game_proccess():
     board = Three(16, 22, screen)
     board.set_view(20, 200, 35)
 
@@ -47,4 +106,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    pygame.init()
+    size = 600, 1000
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption("Три в ряд")
+    FILL_MODE = False
+    start_menu()
+    game_proccess()
