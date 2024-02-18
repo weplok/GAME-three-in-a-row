@@ -1,70 +1,62 @@
 import pygame
 
+from random import randint
+
 from board import Board
+import exc
 
 
-class Lines(Board):
-    def __init__(self, width, height):
+class Three(Board):
+    def __init__(self, width, height, screen):
         super().__init__(width, height)
-        self.selected_cell = None
+        self.screen = screen
+        self.generate_board()
+        self.pressed_pos_list = list()
 
-    def has_path(self, x1, y1, x2, y2):
-        # словарь расстояний
-        d = {(x1, y1): 0}
-        v = [(x1, y1)]
-        while len(v) > 0:
-            x, y = v.pop(0)
-            for dy in range(-1, 2):
-                for dx in range(-1, 2):
-                    if dx * dy != 0:
-                        continue
-                    if x + dx < 0 or x + dx >= self.width or y + dy < 0 or y + dy >= self.height:
-                        continue
-                    if self.board[y + dy][x + dx] == 0:
-                        dn = d.get((x + dx, y + dy), -1)
-                        if dn == -1:
-                            d[(x + dx, y + dy)] = d.get((x, y), -1) + 1
-                            v.append((x + dx, y + dy))
-        dist = d.get((x2, y2), -1)
-        return dist >= 0
-
-    def on_click(self, cell):
-
-        y = cell[0]
-        x = cell[1]
-        if self.selected_cell is None:
-
-            if self.board[y][x] == 1:
-                self.selected_cell = x, y
-            else:
-                self.board[y][x] = 1
-
-        else:
-            if self.selected_cell == (x, y):
-                self.selected_cell = None
-                return
-
-            x2 = self.selected_cell[0]
-            y2 = self.selected_cell[1]
-            if self.has_path(x2, y2, x, y):
-                self.board[y][x] = 1
-                self.board[y2][x2] = 0
-                self.selected_cell = None
-
-    def render(self, screen):
+    def generate_board(self):
         for y in range(self.height):
             for x in range(self.width):
+                if self.board[y][x] == 0:
+                    self.board[y][x] = randint(1, 4)
 
-                if self.board[y][x] == 1:
-                    color = pygame.Color("blue")
-                    if self.selected_cell == (x, y):
-                        color = pygame.Color("red")
-                    pygame.draw.ellipse(screen, color,
-                                        (x * self.cell_size + self.left,
-                                         y * self.cell_size + self.top, self.cell_size,
-                                         self.cell_size))
+    def get_clicked_pos(self, x, y):
+        if [x, y] not in self.pressed_pos_list:
+            self.pressed_pos_list.append([x, y])
+            if self.board[y][x] != 0:
+                self.board[y][x] += 4
 
-                pygame.draw.rect(screen, pygame.Color(255, 255, 255),
-                                 (x * self.cell_size + self.left, y * self.cell_size + self.top,
-                                  self.cell_size,
-                                  self.cell_size), 1)
+    def worked_pressed_pos(self):  # В будущем отлавливавать Exception, а не return
+
+        first_x = self.pressed_pos_list[0][0]
+        first_y = self.pressed_pos_list[0][1]
+        main_color = self.board[first_y][first_x]
+        self.board[first_y][first_x] -= 4
+
+        success_count = 1
+        one_color = True
+
+        for x, y in self.pressed_pos_list[1:]:
+            if self.board[y][x] == main_color:
+                success_count += 1
+            else:
+                one_color = False
+            self.board[y][x] -= 4
+        if len(self.pressed_pos_list) < 3:
+            raise exc.LessThanThreeError
+        if one_color:
+            return success_count
+        raise exc.OnlyOneColorError
+
+    def result_work(self):
+        try:
+            answer = self.worked_pressed_pos()
+        except exc.OnlyOneColorError:
+            answer = "ONLY ONE COLOR"
+        except exc.LessThanThreeError:
+            answer = "LESS THAN THREE"
+        else:
+            for x, y in self.pressed_pos_list:
+                self.board[y][x] = 0
+        self.pressed_pos_list = list()
+
+        return answer
