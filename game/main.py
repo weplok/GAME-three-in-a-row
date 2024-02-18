@@ -1,13 +1,13 @@
-import pygame
-
 from game_board import Three
+
+import pygame
 
 
 def main():
     pygame.init()
     size = 600, 1000
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption('Три в ряд')
+    pygame.display.set_caption("Три в ряд")
 
     board = Three(16, 22, screen)
     board.set_view(20, 200, 35)
@@ -46,5 +46,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

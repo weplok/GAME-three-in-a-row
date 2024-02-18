@@ -1,8 +1,7 @@
-import pygame
-
 from random import randint
 
 from board import Board
+
 import exc
 
 
@@ -13,21 +12,25 @@ class Three(Board):
         self.generate_board()
         self.pressed_pos_list = list()  # Нажатые клетки
 
-    def generate_board(self):   # Случайная генерация цветных клеток
+    # Случайная генерация цветных клеток
+    def generate_board(self):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == 0:
                     self.board[y][x] = randint(1, 4)
 
-    def get_clicked_pos(self, x, y):    # Добавление клетки в список нажатых (если нажата)
+    # Добавление клетки в список нажатых (если нажата)
+    def get_clicked_pos(self, x, y):
         if [x, y] not in self.pressed_pos_list:
             self.pressed_pos_list.append([x, y])
             if self.board[y][x] != 0:
                 self.board[y][x] += 4
 
-    def worked_pressed_pos(self):  # "Зажимание" клеток, подсчёт количества успешно выделенных клеток или возврат ошибки
-
-        # Обработка первой нажатой клетки. Цвета следующих нажатых клеток будут сравниваться с цветом первой
+    # "Зажимание" клеток, подсчёт количества успешно
+    # выделенных клеток или возврат ошибки
+    def worked_pressed_pos(self):
+        # Обработка первой нажатой клетки.
+        # Цвета следующих нажатых клеток будут сравниваться с цветом первой
         first_x = self.pressed_pos_list[0][0]
         first_y = self.pressed_pos_list[0][1]
         main_color = self.board[first_y][first_x]
@@ -53,7 +56,8 @@ class Three(Board):
             return success_count
         raise exc.OnlyOneColorError
 
-    def result_work(self):  # Возвращает результат работы (из worked_pressed_pos())
+    # Возвращает результат работы (из worked_pressed_pos())
+    def result_work(self):
         try:
             answer = self.worked_pressed_pos()
         except exc.OnlyOneColorError:
@@ -68,7 +72,8 @@ class Three(Board):
         self.pressed_pos_list = list()
         return answer
 
-    def after_success_work(self):   # Заполняет успешно выделенные клетки верхними клетками
+    # Заполняет успешно выделенные клетки верхними клетками
+    def after_success_work(self):
         # Для удобной работы поле клеток транспонируется
         board_trans = [list(tup) for tup in zip(*self.board)]
         edited_rows = list()
