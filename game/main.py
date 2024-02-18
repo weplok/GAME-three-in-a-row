@@ -24,8 +24,10 @@ def main():
                 running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if board.get_cell(event.pos) is not None:
+                cell = board.get_cell(event.pos)
+                if cell is not None:
                     mouse_down_flag = True
+                    board.get_clicked_pos(cell[1], cell[0])
 
             if event.type == pygame.MOUSEMOTION and mouse_down_flag:
                 if board.get_cell(event.pos) is None:
