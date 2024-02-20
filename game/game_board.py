@@ -36,10 +36,11 @@ class Three(Board):
         main_color = self.board[first_y][first_x]
         if self.board[first_y][first_x] != 0:
             self.board[first_y][first_x] -= 4
-            one_color = True
+            black_cell = False
         else:
-            one_color = False
+            black_cell = True
 
+        one_color = True
         success_count = 1
         # Обработка следующих клеток
         for x, y in self.pressed_pos_list[1:]:
@@ -51,6 +52,8 @@ class Three(Board):
                 self.board[y][x] -= 4
 
         # Обработка исключений (описания см. в exc.py)
+        if black_cell:
+            raise exc.BlackCellError
         if len(self.pressed_pos_list) < 3:
             raise exc.LessThanThreeError
         if one_color:
@@ -65,6 +68,8 @@ class Three(Board):
             answer = "ONLY ONE COLOR"
         except exc.LessThanThreeError:
             answer = "LESS THAN THREE"
+        except exc.BlackCellError:
+            answer = "NO BLACK CELLS"
         else:
             for x, y in self.pressed_pos_list:
                 # Символом А помечаются успешно выделенные клетки

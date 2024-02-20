@@ -4,3 +4,7 @@ class LessThanThreeError(Exception):
 
 class OnlyOneColorError(Exception):
     pass
+
+
+class BlackCellError(Exception):
+    pass

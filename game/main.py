@@ -1,5 +1,7 @@
 from game_board import Three
 
+from help_func import print_user_result
+
 import pygame
 
 
@@ -80,6 +82,14 @@ def start_menu():
     return
 
 
+def calculate_the_result(board):
+    global result_answer
+    result_answer = board.result_work()
+    if FILL_MODE:
+        board.generate_board()
+    return False
+
+
 def game_proccess():
     board = Three(16, 22, screen)
     board.set_view(20, 200, 35)
@@ -103,20 +113,19 @@ def game_proccess():
 
             if event.type == pygame.MOUSEMOTION and mouse_down_flag:
                 if board.get_cell(event.pos) is None:
-                    mouse_down_flag = False
+                    mouse_down_flag = calculate_the_result(board)
                     break
                 cell = board.get_cell(event.pos)
                 board.get_clicked_pos(cell[1], cell[0])
 
             if event.type == pygame.MOUSEBUTTONUP and mouse_down_flag:
-                mouse_down_flag = False
-                print(board.result_work())
-                if FILL_MODE:
-                    board.generate_board()
+                mouse_down_flag = calculate_the_result(board)
 
             screen.fill((0, 0, 0))
             board.render(screen)
+            print_user_result(screen, result_answer)
             pygame.display.flip()
+            # clock.tick(FPS)
     pygame.quit()
 
 
@@ -125,6 +134,9 @@ if __name__ == "__main__":
     size = 600, 1000
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Три в ряд")
+    # clock = pygame.Clock.clock()
+    # FPS = 30
+    result_answer = 0
     FILL_MODE = False
     start_menu()
     game_proccess()
