@@ -12,12 +12,21 @@ class Three(Board):
         self.generate_board()
         self.pressed_pos_list = list()  # Нажатые клетки
 
+        self.records = {"score": 0, "max_cells": 0}
+
     # Случайная генерация цветных клеток
     def generate_board(self):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == 0:
                     self.board[y][x] = randint(1, 4)
+
+    def cancel_the_selection(self):
+        try:
+            self.worked_pressed_pos()
+        except Exception:
+            pass
+        self.pressed_pos_list = list()
 
     # Добавление клетки в список нажатых (если нажата)
     def get_clicked_pos(self, x, y):

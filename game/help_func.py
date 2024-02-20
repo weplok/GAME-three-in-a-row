@@ -15,15 +15,15 @@ def print_user_result(screen, result):
         result_text = ["НЕВОЗМОЖНО!!"]
     else:
         result_text = [motivating_phrases[result]]
-    font = pygame.font.Font("static/main_font.ttf", 100)
+    font = pygame.font.Font("static/main_font.ttf", 90)
 
     top = 10
     for text in result_text:
         string_rendered = font.render(text, 1, "green")
         intro_rect = string_rendered.get_rect()
         intro_rect.top = top
-        intro_rect.x = 10
-        top += 50
+        intro_rect.x = 300 - intro_rect.width / 2
+        top += 90
         screen.blit(string_rendered, intro_rect)
 
 

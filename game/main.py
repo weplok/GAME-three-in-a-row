@@ -87,6 +87,8 @@ def calculate_the_result(board):
     result_answer = board.result_work()
     if FILL_MODE:
         board.generate_board()
+        global motivation_ticks
+    motivation_ticks = pygame.time.get_ticks()
     return False
 
 
@@ -106,10 +108,14 @@ def game_proccess():
                 running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                cell = board.get_cell(event.pos)
-                if cell is not None:
-                    mouse_down_flag = True
-                    board.get_clicked_pos(cell[1], cell[0])
+                if event.button == 1:
+                    cell = board.get_cell(event.pos)
+                    if cell is not None:
+                        mouse_down_flag = True
+                        board.get_clicked_pos(cell[1], cell[0])
+                elif event.button == 3:
+                    mouse_down_flag = False
+                    board.cancel_the_selection()
 
             if event.type == pygame.MOUSEMOTION and mouse_down_flag:
                 if board.get_cell(event.pos) is None:
@@ -119,13 +125,21 @@ def game_proccess():
                 board.get_clicked_pos(cell[1], cell[0])
 
             if event.type == pygame.MOUSEBUTTONUP and mouse_down_flag:
-                mouse_down_flag = calculate_the_result(board)
+                if event.button == 1:
+                    mouse_down_flag = calculate_the_result(board)
 
-            screen.fill((0, 0, 0))
-            board.render(screen)
-            print_user_result(screen, result_answer)
-            pygame.display.flip()
-            # clock.tick(FPS)
+        global motivation_ticks, result_answer
+        if motivation_ticks != -1:
+            seconds = (pygame.time.get_ticks() - motivation_ticks) / 1000
+            if seconds > 2:
+                motivation_ticks = -1
+                result_answer = 0
+
+        screen.fill((0, 0, 0))
+        board.render(screen)
+        print_user_result(screen, result_answer)
+        pygame.display.flip()
+        # clock.tick(FPS)
     pygame.quit()
 
 
@@ -138,5 +152,6 @@ if __name__ == "__main__":
     # FPS = 30
     result_answer = 0
     FILL_MODE = False
+    motivation_ticks = -1
     start_menu()
     game_proccess()
