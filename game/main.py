@@ -1,12 +1,12 @@
 from game_board import Three
 
-from help_func import print_user_result
+from help_func import get_user_result, print_user_result
 
 import pygame
 
 
 def write_text(screen, text, size, color, top, x):
-    font = pygame.font.Font("static/main_font.ttf", size)
+    font = pygame.font.Font("static/fonts/main_font.ttf", size)
     string_rendered = font.render(text, 1, color)
     intro_rect = string_rendered.get_rect()
     intro_rect.top = top
@@ -26,7 +26,8 @@ def start_menu():
 
     # Загрузка фона меню
     fon = pygame.transform.scale(
-        pygame.image.load("static/fon.jpg"), (size[0], size[1])
+        pygame.image.load("static/game_backgrounds/fon.jpg"),
+        (size[0], size[1]),
     )
     screen.blit(fon, (0, 0))
 
@@ -49,7 +50,8 @@ def start_menu():
 
     # Меню выбора режима игры
     fon = pygame.transform.scale(
-        pygame.image.load("static/fon.jpg"), (size[0], size[1])
+        pygame.image.load("static/game_backgrounds/fon.jpg"),
+        (size[0], size[1]),
     )
     screen.blit(fon, (0, 0))
     write_text(screen, intro_text[0], 65, color, 80, 40)
@@ -85,6 +87,7 @@ def start_menu():
 def calculate_the_result(board):
     global result_answer
     result_answer = board.result_work()
+    result_answer = get_user_result(result_answer)
     if FILL_MODE:
         board.generate_board()
         global motivation_ticks
@@ -93,8 +96,8 @@ def calculate_the_result(board):
 
 
 def game_proccess():
-    board = Three(16, 22, screen)
-    board.set_view(20, 200, 35)
+    board = Three(16, 21, screen)
+    board.set_view(20, 235, 35)
 
     board.render(screen)
 
@@ -119,7 +122,8 @@ def game_proccess():
 
             if event.type == pygame.MOUSEMOTION and mouse_down_flag:
                 if board.get_cell(event.pos) is None:
-                    mouse_down_flag = calculate_the_result(board)
+                    mouse_down_flag = False
+                    board.cancel_the_selection()
                     break
                 cell = board.get_cell(event.pos)
                 board.get_clicked_pos(cell[1], cell[0])
@@ -136,8 +140,16 @@ def game_proccess():
                 result_answer = 0
 
         screen.fill((0, 0, 0))
+
+        fon = pygame.transform.scale(
+            pygame.image.load("static/game_backgrounds/game_fon.jpg"),
+            (size[0], size[1]),
+        )
+        screen.blit(fon, (0, 0))
+
         board.render(screen)
         print_user_result(screen, result_answer)
+
         pygame.display.flip()
         # clock.tick(FPS)
     pygame.quit()

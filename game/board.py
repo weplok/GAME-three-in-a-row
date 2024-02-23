@@ -17,7 +17,12 @@ class Board:
         self.cell_size = cell_size
 
     def render(self, screen):
-        color = {1: "red", 2: "yellow", 3: "lime", 4: "blue"}
+        color = {
+            1: "red_circle.png",
+            2: "yellow_circle.png",
+            3: "lime_circle.png",
+            4: "blue_circle.png",
+        }
         for y, row in zip(
             range(
                 self.top,
@@ -41,17 +46,17 @@ class Board:
                     )
                     posi -= 4
                 if posi in range(1, 5):
-                    pygame.draw.ellipse(
-                        screen,
-                        color[posi],
-                        (x, y, self.cell_size, self.cell_size),
+                    circle = pygame.transform.scale(
+                        pygame.image.load(
+                            f"static/game_sprites/{color[posi]}"
+                        ),
+                        size=(self.cell_size, self.cell_size),
                     )
+                    screen.blit(circle, (x, y))
                 if posi == 0:
-                    pygame.draw.rect(
-                        screen, "black", (x, y, self.cell_size, self.cell_size)
-                    )
+                    pass
                 pygame.draw.rect(
-                    screen, "white", (x, y, self.cell_size, self.cell_size), 1
+                    screen, "gray", (x, y, self.cell_size, self.cell_size), 1
                 )
 
     def get_cell(self, mouse_pos):
