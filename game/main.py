@@ -1,20 +1,22 @@
+import sys
+
 from game_board import Three
 
-from help_func import get_user_result, print_user_result, print_user_score
+from help_func import (
+    BackToMenu,
+    back_to_lobby_check,
+    calculate_the_result,
+    print_user_result,
+    print_user_score,
+    write_text,
+)
 
 import pygame
 
 
-def write_text(screen, text, size, color, top, x):
-    font = pygame.font.Font("static/fonts/main_font.ttf", size)
-    string_rendered = font.render(text, 1, color)
-    intro_rect = string_rendered.get_rect()
-    intro_rect.top = top
-    intro_rect.x = x
-    screen.blit(string_rendered, intro_rect)
+def start_menu(render_score):
+    global score, max_cells
 
-
-def start_menu():
     intro_text = [
         "ТРИ В РЯД! ПРОТОТИП",
         "ИГРАТЬ",
@@ -35,12 +37,16 @@ def start_menu():
     write_text(screen, intro_text[0], 65, color, 80, 40)
     write_text(screen, intro_text[1], 50, color, 400, 230)
     pygame.draw.rect(screen, "white", (220, 395, 160, 60), 2)
+    if render_score:
+        write_text(screen, f"Счёт: {score}", 65, color, 700, 40)
+        write_text(screen, f"Максимум клеток: {max_cells}", 65, color, 800, 40)
 
     main_menu = True
     while main_menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.pos[0] in range(220, 380) and event.pos[1] in range(
                     395, 455
@@ -60,6 +66,9 @@ def start_menu():
     pygame.draw.rect(screen, "white", (45, 495, 320, 55), 2)
     write_text(screen, intro_text[4], 50, color, 570, 50)
     pygame.draw.rect(screen, "white", (45, 565, 320, 55), 2)
+    if render_score:
+        write_text(screen, f"Счёт: {score}", 65, color, 700, 40)
+        write_text(screen, f"Максимум клеток: {max_cells}", 65, color, 800, 40)
 
     choose_game_mode = True
     global FILL_MODE
@@ -67,6 +76,7 @@ def start_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.pos[0] in range(45, 365) and event.pos[1] in range(
                     495, 550
@@ -84,27 +94,10 @@ def start_menu():
     return
 
 
-def calculate_the_result(board):
-    global result_answer
+def game_proccess():
+    global motivation_ticks, result_answer
     global score, max_cells
 
-    result_answer = board.result_work()
-
-    if isinstance(result_answer, int):
-        score += result_answer * 100
-        if result_answer > max_cells:
-            max_cells = result_answer
-
-    result_answer = get_user_result(result_answer)
-
-    if FILL_MODE:
-        board.generate_board()
-        global motivation_ticks
-    motivation_ticks = pygame.time.get_ticks()
-    return False
-
-
-def game_proccess():
     board = Three(16, 21, screen)
     board.set_view(20, 235, 35)
 
@@ -125,6 +118,8 @@ def game_proccess():
                     if cell is not None:
                         mouse_down_flag = True
                         board.get_clicked_pos(cell[1], cell[0])
+                    elif back_to_lobby_check(event.pos):
+                        raise BackToMenu()
                 elif event.button == 3:
                     mouse_down_flag = False
                     board.cancel_the_selection()
@@ -139,9 +134,15 @@ def game_proccess():
 
             if event.type == pygame.MOUSEBUTTONUP and mouse_down_flag:
                 if event.button == 1:
-                    mouse_down_flag = calculate_the_result(board)
+                    mouse_down_flag = False
+                    result = calculate_the_result(
+                        board, score, max_cells, FILL_MODE
+                    )
+                    result_answer = result["result_answer"]
+                    score = result["score"]
+                    max_cells = result["max_cells"]
+                    motivation_ticks = result["motivation_ticks"]
 
-        global motivation_ticks, result_answer
         if motivation_ticks != -1:
             seconds = (pygame.time.get_ticks() - motivation_ticks) / 1000
             if seconds > 2:
@@ -161,7 +162,9 @@ def game_proccess():
         print_user_score(screen, score, max_cells)
 
         pygame.display.flip()
+
     pygame.quit()
+    sys.exit()
 
 
 if __name__ == "__main__":
@@ -169,9 +172,15 @@ if __name__ == "__main__":
     size = 600, 1000
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Три в ряд. ПРОТОТИП")
-    score, max_cells = 0, 0
-    result_answer = 0
+
+    render_score_flag = False
     FILL_MODE = False
-    motivation_ticks = -1
-    start_menu()
-    game_proccess()
+    while True:
+        start_menu(render_score_flag)
+        try:
+            score, max_cells = 0, 0
+            result_answer = 0
+            motivation_ticks = -1
+            game_proccess()
+        except BackToMenu:
+            render_score_flag = True

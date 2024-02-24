@@ -3,6 +3,10 @@ import random
 import pygame
 
 
+class BackToMenu(Exception):
+    pass
+
+
 motivating_phrases = {
     "common": ["НОРМ", "НАЙС", "КЛАСС", "НЕПЛОХО!", "МОЛОДЕЦ"],
     "uncommon": ["КРУТО", "ОГОО!", "ВАААУ!", "ШОК!", "ВОТ ЭТО ДА"],
@@ -12,6 +16,15 @@ motivating_phrases = {
     "diamond": ["МОЩНО!!!!", "КАААК???", "ПОТРЯСАЮЩЕ!"],
     "legendary": ["НЕВОЗМОЖНО!!!", "ВЕЛИКОЛЕПНО!!", "ПОТРЯСАЮЩЕ!!!"],
 }
+
+
+def write_text(screen, text, size, color, top, x):
+    font = pygame.font.Font("static/fonts/main_font.ttf", size)
+    string_rendered = font.render(text, 1, color)
+    intro_rect = string_rendered.get_rect()
+    intro_rect.top = top
+    intro_rect.x = x
+    screen.blit(string_rendered, intro_rect)
 
 
 def get_user_result(result):
@@ -75,3 +88,31 @@ def print_user_score(screen, score, max_cells):
     max_cells_rect.top = 965
     max_cells_rect.x = 580 - max_cells_rect.width
     screen.blit(max_cells_rendered, max_cells_rect)
+
+
+def calculate_the_result(board, score, max_cells, fill_mode=False):
+    result_answer = board.result_work()
+
+    if isinstance(result_answer, int):
+        score += result_answer * 100
+        if result_answer > max_cells:
+            max_cells = result_answer
+
+    result_answer = get_user_result(result_answer)
+
+    if fill_mode:
+        board.generate_board()
+    motivation_ticks = pygame.time.get_ticks()
+    return {
+        "motivation_ticks": motivation_ticks,
+        "result_answer": result_answer,
+        "score": score,
+        "max_cells": max_cells,
+    }
+
+
+def back_to_lobby_check(coords):
+    x, y = coords
+    if x in range(2, 54) and y in range(2, 54):
+        return True
+    return False
