@@ -1,6 +1,6 @@
 from game_board import Three
 
-from help_func import get_user_result, print_user_result
+from help_func import get_user_result, print_user_result, print_user_score
 
 import pygame
 
@@ -86,8 +86,17 @@ def start_menu():
 
 def calculate_the_result(board):
     global result_answer
+    global score, max_cells
+
     result_answer = board.result_work()
+
+    if isinstance(result_answer, int):
+        score += result_answer * 100
+        if result_answer > max_cells:
+            max_cells = result_answer
+
     result_answer = get_user_result(result_answer)
+
     if FILL_MODE:
         board.generate_board()
         global motivation_ticks
@@ -149,9 +158,9 @@ def game_proccess():
 
         board.render(screen)
         print_user_result(screen, result_answer)
+        print_user_score(screen, score, max_cells)
 
         pygame.display.flip()
-        # clock.tick(FPS)
     pygame.quit()
 
 
@@ -159,9 +168,8 @@ if __name__ == "__main__":
     pygame.init()
     size = 600, 1000
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Три в ряд")
-    # clock = pygame.Clock.clock()
-    # FPS = 30
+    pygame.display.set_caption("Три в ряд. ПРОТОТИП")
+    score, max_cells = 0, 0
     result_answer = 0
     FILL_MODE = False
     motivation_ticks = -1

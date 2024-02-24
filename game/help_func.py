@@ -3,6 +3,17 @@ import random
 import pygame
 
 
+motivating_phrases = {
+    "common": ["НОРМ", "НАЙС", "КЛАСС", "НЕПЛОХО!", "МОЛОДЕЦ"],
+    "uncommon": ["КРУТО", "ОГОО!", "ВАААУ!", "ШОК!", "ВОТ ЭТО ДА"],
+    "rare": ["ШОК!!!", "ВОТ ЭТО ДА!!", "КРУТО!!", "ЗДОРОВО!"],
+    "silver": ["ТЫ ЛУЧШИЙ!", "НЕУЖЕЛИ??", "НЕВОЗМОЖНО!", "МОЩНО!!"],
+    "gold": ["СИЛЬНО!", "ЧТООООО??", "ШИКАРНО!!!"],
+    "diamond": ["МОЩНО!!!!", "КАААК???", "ПОТРЯСАЮЩЕ!"],
+    "legendary": ["НЕВОЗМОЖНО!!!", "ВЕЛИКОЛЕПНО!!", "ПОТРЯСАЮЩЕ!!!"],
+}
+
+
 def get_user_result(result):
     if result == "ONLY ONE COLOR":
         result_text = ["ТОЛЬКО", "ОДИН ЦВЕТ"]
@@ -30,7 +41,7 @@ def get_user_result(result):
 def print_user_result(screen, result_text):
     if result_text == 0:
         result_text = []
-    font = pygame.font.Font("static/fonts/main_font.ttf", 90)
+    font = pygame.font.Font("static/fonts/pixel_font.ttf", 108)
 
     top = 100
     for text in reversed(result_text):
@@ -42,12 +53,25 @@ def print_user_result(screen, result_text):
         screen.blit(string_rendered, intro_rect)
 
 
-motivating_phrases = {
-    "common": ["НОРМ", "НАЙС", "КЛАСС", "НЕПЛОХО!", "МОЛОДЕЦ"],
-    "uncommon": ["КРУТО", "ОГОО!", "ВАААУ!", "ШОК!", "ВОТ ЭТО ДА"],
-    "rare": ["ШОК!!!", "ВОТ ЭТО ДА!!", "КРУТО!!", "ЗДОРОВО!"],
-    "silver": ["ТЫ ЛУЧШИЙ!", "НЕУЖЕЛИ??", "НЕВОЗМОЖНО!", "МОЩНО!!"],
-    "gold": ["СИЛЬНО!", "ЧТООООО??", "ШИКАРНО!!!"],
-    "diamond": ["МОЩНО!!!!", "КАААК???", "ПОТРЯСАЮЩЕ!"],
-    "legendary": ["НЕВОЗМОЖНО!!!", "ВЕЛИКОЛЕПНО!!", "ПОТРЯСАЮЩЕ!!!"],
-}
+def print_user_score(screen, score, max_cells):
+    font = pygame.font.Font("static/fonts/pixel_font.ttf", 40)
+
+    score_rendered = font.render(
+        f"Счёт: {str(score)}",
+        1,
+        "#E8CED7",
+    )
+    score_rect = score_rendered.get_rect()
+    score_rect.top = 965
+    score_rect.x = 20
+    screen.blit(score_rendered, score_rect)
+
+    max_cells_rendered = font.render(
+        f"Максимум клеток: {str(max_cells)}",
+        1,
+        "#E8CED7",
+    )
+    max_cells_rect = max_cells_rendered.get_rect()
+    max_cells_rect.top = 965
+    max_cells_rect.x = 580 - max_cells_rect.width
+    screen.blit(max_cells_rendered, max_cells_rect)
