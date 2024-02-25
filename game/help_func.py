@@ -133,12 +133,12 @@ def load_sound(pg):
     # Трек на игровой сеанс выбирается случайно
     music = random.choice(
         [
-            "daisuke.mp3",
-            "miami.mp3",
-            "mainmenu.mp3",
-            "untitled2.mp3",
-            "delay.mp3",
-            "release.mp3",
+            "daisuke.ogg",
+            "miami.ogg",
+            "mainmenu.ogg",
+            "untitled2.ogg",
+            "delay.ogg",
+            "release.ogg",
         ]
     )
     pg.mixer.music.load(f"sounds/music/{music}")
