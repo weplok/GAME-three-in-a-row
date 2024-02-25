@@ -3,10 +3,8 @@ import random
 import pygame
 
 
-class BackToMenu(Exception):
-    pass
-
-
+# Мотивационные фразы, выбор зависит от количества выделенных клеток
+# (Чем больше выделенно, тем круче фраза)
 motivating_phrases = {
     "common": ["НОРМ", "НАЙС", "КЛАСС", "НЕПЛОХО!", "МОЛОДЕЦ"],
     "uncommon": ["КРУТО", "ОГОО!", "ВАААУ!", "ШОК!", "ВОТ ЭТО ДА"],
@@ -18,6 +16,7 @@ motivating_phrases = {
 }
 
 
+# Общая функция вывода текста
 def write_text(screen, text, size, color, top, x):
     font = pygame.font.Font("static/fonts/main_font.ttf", size)
     string_rendered = font.render(text, 1, color)
@@ -27,7 +26,8 @@ def write_text(screen, text, size, color, top, x):
     screen.blit(string_rendered, intro_rect)
 
 
-def get_user_result(result):
+# Возвращает мотивационную фразу либо фразу об ошибке в виде СПИСКА строк
+def get_user_result(result: int):
     if result == "ONLY ONE COLOR":
         result_text = ["ТОЛЬКО", "ОДИН ЦВЕТ"]
     elif result == "LESS THAN THREE":
@@ -51,7 +51,8 @@ def get_user_result(result):
     return result_text
 
 
-def print_user_result(screen, result_text):
+# Печатает мотивационную фразу на экран игрока
+def print_user_result(screen, result_text: list):
     if result_text == 0:
         result_text = []
     font = pygame.font.Font("static/fonts/pixel_font.ttf", 108)
@@ -66,6 +67,7 @@ def print_user_result(screen, result_text):
         screen.blit(string_rendered, intro_rect)
 
 
+# Печатает очки и количество максимально выделенных клеток игрока за игру
 def print_user_score(screen, score, max_cells):
     font = pygame.font.Font("static/fonts/pixel_font.ttf", 40)
 
@@ -90,6 +92,7 @@ def print_user_score(screen, score, max_cells):
     screen.blit(max_cells_rendered, max_cells_rect)
 
 
+# Подсчёт результата выделения
 def calculate_the_result(board, score, max_cells, fill_mode=False):
     result_answer = board.result_work()
 
@@ -100,9 +103,12 @@ def calculate_the_result(board, score, max_cells, fill_mode=False):
 
     result_answer = get_user_result(result_answer)
 
+    # В игровом режиме заполнения происходит заполнение поля
     if fill_mode:
         board.generate_board()
+
     motivation_ticks = pygame.time.get_ticks()
+
     return {
         "motivation_ticks": motivation_ticks,
         "result_answer": result_answer,
@@ -111,8 +117,64 @@ def calculate_the_result(board, score, max_cells, fill_mode=False):
     }
 
 
+# Проверить, нажата ли кнопка возвращения домой
 def back_to_lobby_check(coords):
     x, y = coords
     if x in range(2, 54) and y in range(2, 54):
         return True
     return False
+
+
+# Загрузка звуков происходит только во время запуска игры
+def load_sound(pg):
+    pg.mixer.pre_init(44100, -16, 1, 512)
+    pg.init()
+
+    # Трек на игровой сеанс выбирается случайно
+    music = random.choice(
+        [
+            "daisuke.mp3",
+            "miami.mp3",
+            "mainmenu.mp3",
+            "untitled2.mp3",
+            "delay.mp3",
+            "release.mp3",
+        ]
+    )
+    pg.mixer.music.load(f"sounds/music/{music}")
+    pg.mixer.music.play(-1)
+    vol = 0.1
+    pg.mixer.music.set_volume(vol)
+
+    # Загрузка всех эмбиентных звуков
+    pre_ambient = [
+        "click1.wav",
+        "click2.wav",
+        "click3.wav",
+        "collect1.wav",
+        "collect2.wav",
+        "collect3.wav",
+        "collect4.wav",
+        "cell.wav",
+        "cancel.wav",
+        "gohome.wav",
+    ]
+
+    # Словарь эмбиентных звуков
+    ambient = {
+        "click": [],
+        "collect": [],
+        "cell": [],
+        "cancel": [],
+        "gohome": [],
+    }
+
+    for sound in pre_ambient:
+        s = pg.mixer.Sound(f"sounds/ambient/{sound}")
+        s.set_volume(0.2)
+        for key in ambient.keys():
+            if key in sound:
+                ambient[key].append(s)
+                break
+
+    return [vol, ambient]
