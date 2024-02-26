@@ -36,3 +36,9 @@ cd game
 ```bash
 python main.py
 ```
+
+***
+
+## Special thanks
+
+### Painter - ANANAS2077 - discord: 2077ok
