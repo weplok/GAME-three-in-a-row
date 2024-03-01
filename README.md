@@ -1,6 +1,6 @@
-# GAME-three-in-a-row
+# "Три в ряд. ПРОТОТИП!"
 
-## Pygame Project by students of Yandex Lyceum 2024
+## Игровой проект ученика Яндекс Лицея (2 курс)
 
 [![Linting](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml/badge.svg?branch=main)](https://github.com/weplok/GAME-three-in-a-row/actions/workflows/blank.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/weplok/GAME-three-in-a-row)
@@ -9,9 +9,19 @@
 
 ***
 
-## To run game in Windows, use terminal in project-directory
+## Используйте следующие команды для запуска игры на Windows
 
-### Create and activate venv
+### Установка репоситория на Ваш компьютер
+
+```bash
+git clone https://github.com/weplok/GAME-three-in-a-row.git
+```
+
+```bash
+cd ./GAME-three-in-a-row
+```
+
+### Создание и активация виртуального окружения
 
 ```bash
 python -m venv venv
@@ -21,13 +31,13 @@ python -m venv venv
 call venv/Scripts/activate
 ```
 
-### Install packages
+### Установка необходимых библиотек для игры
 
 ```bash
 pip install -r requirements/prod.txt
 ```
 
-### Run game
+### Запуск игры
 
 ```bash
 cd game
@@ -39,6 +49,14 @@ python main.py
 
 ***
 
-## Special thanks
+### Три в ряд - жанр игр, в которых необходимо соединять по три *клетки* на игровом поле, пока все *они* не закончатся.
 
-### Painter - ANANAS2077 - discord: 2077ok
+- Я изменил эту концепцию. Игроку всё ещё необходимо соединять три и более клетки, но не перемещением *одной* клетки. Водите мышкой и соединяйте клетки одинакового цвета, собирая самые разнообразные фигуры!
+
+- В моей игре смешиваются воксельный и пиксельный стили. Использована музыка из Hotline Miami и 8-bit звуки.
+
+***
+
+## Отдельная благодарность
+
+### Художник - ANANAS2077 - discord: 2077ok
